@@ -51,7 +51,7 @@ class Game:
             elif key_typed == "a":
                # move the tetromino right by one
                current_tetromino.rotation(key_typed, grid, self.rotated, self.random_type)
-            self.rotated = not self.rotated
+               self.rotated = not self.rotated
             # clear the queue that stores all the keys pressed/typed
             stddraw.clearKeysTyped()
 
