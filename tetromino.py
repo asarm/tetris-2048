@@ -124,6 +124,23 @@ class Tetromino:
                         self.tile_matrix[row][col].move(0, -1)
         return True  # successful move in the given direction
 
+    def rotation(self, key, game_grid, rotated, type):
+        l = self.tile_matrix.shape[0]
+        for r in range(l):
+            if type == 'I':
+                self.rotate_I(r, rotated)
+            elif type == 'T':
+                print("T")
+
+
+    def rotate_I(self, r, rotated):
+        if rotated:
+            self.tile_matrix[r][1].position.x -= r - 3
+            self.tile_matrix[r][1].position.y -= r - 3
+        else:
+            self.tile_matrix[r][1].position.x += r - 3
+            self.tile_matrix[r][1].position.y += r
+
     # Method to check if the tetromino can be moved in the given direction or not
     def can_be_moved(self, dir, game_grid):
         n = len(self.tile_matrix)  # n = number of rows = number of columns
