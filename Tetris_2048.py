@@ -6,6 +6,7 @@ from picture import Picture # used representing images to display
 import os # used for file and directory operations
 from color import Color # used for coloring the game menu
 
+
 # MAIN FUNCTION OF THE PROGRAM
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
