@@ -72,6 +72,7 @@ class Tetromino:
         self.bottom_left_corner.y = grid_height
         # a random horizontal position
         self.bottom_left_corner.x = random.randint(0, grid_width - n)
+
         # create each tile by computing its position w.r.t. the game grid based on
         # its bottom_left_corner
         for i in range(len(occupied_tiles)):
@@ -129,15 +130,15 @@ class Tetromino:
         for r in range(n):
             for c in range(n):
                 if self.tile_matrix[r][c] != None:
-                    self.rotate_I(r, c, rotated)
+                    if type == 'I':
+                        self.rotate_I(r, c, rotated)
 
     def rotate_I(self, r, c, rotated):
         if rotated:
-            self.tile_matrix[r][c].position.x -= r - 3
-            self.tile_matrix[r][c].position.y -= r - 3
+            self.tile_matrix[r][c].move(-r + 3, -r + 3)
         else:
-            self.tile_matrix[r][c].position.x += r - 3
-            self.tile_matrix[r][c].position.y += r
+            self.tile_matrix[r][c].move(r - 3, r)
+
 
     # Method to check if the tetromino can be moved in the given direction or not
     def can_be_moved(self, dir, game_grid):
