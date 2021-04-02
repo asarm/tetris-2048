@@ -14,7 +14,7 @@ class Tetromino:
         self.grid_width = grid_width
         # set the shape of the tetromino based on the given type
         occupied_tiles = []
-                if type == 'I':
+        if type == 'I':
             n = 4  # n = number of rows = number of columns in the tile matrix
             # shape of the tetromino I in its initial orientation
             occupied_tiles.append((1, 0))  # (column_index, row_index)
