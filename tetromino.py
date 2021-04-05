@@ -138,16 +138,18 @@ class Tetromino:
             for c in range(n):
                 if self.tile_matrix[r][c] is not None:
                     self.tile_matrix[r][c].move(-r + c, -c + (n - r))
-                    if self.tile_matrix[r][c].get_position().x < 0:
-                        print("Dönemez")
-                        if 0-self.tile_matrix[r][c].get_position().x > padding:
-                            padding = 0-self.tile_matrix[r][c].get_position().x
-                    elif self.tile_matrix[r][c].get_position().x >= 12:
-                        print("Dönemez")
-                        if self.tile_matrix[r][c].get_position().x-11 > padding:
-                            padding = 11 - self.tile_matrix[r][c].get_position().x
-                            
-        print()
+                     if self.tile_matrix[r][c].get_position().x < 0:
+                        for i in range(-self.tile_matrix[r][c].get_position().x):
+                            current_tetromino.move("right", game_grid)
+                        #Buranın işlevini anlamadığım için commentledim kb
+                        #if 0 - self.tile_matrix[r][c].get_position().x > padding:
+                            #padding = 0 - self.tile_matrix[r][c].get_position().x
+
+                    elif self.tile_matrix[r][c].get_position().x > 12:
+                        for j in range(12 - self.tile_matrix[r][c].get_position().x):
+                            current_tetromino.move("left", game_grid)
+                        #if self.tile_matrix[r][c].get_position().x - 11 > padding:
+                            #padding = 11 - self.tile_matrix[r][c].get_position().x
 
 
     # Method to check if the tetromino can be moved in the given direction or not
