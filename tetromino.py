@@ -125,12 +125,11 @@ class Tetromino:
                         self.tile_matrix[row][col].move(0, -1)
         return True  # successful move in the given direction
 
-    def rotation(self):
-        # grid size -> h: 20, w: 12
-        # Keeps how much the object will be displaced
-        padding = 0
+    def rotation(self, game_grid, current_tetromino):
         n = len(self.tile_matrix)
         copy_matrix = np.copy(self.tile_matrix)
+        #padding = 0
+
         for r in range(n):
             for c in range(n):
                 self.tile_matrix[c][n - 1 - r] = copy_matrix[r][c]
