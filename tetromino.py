@@ -146,7 +146,7 @@ class Tetromino:
                             #padding = 0 - self.tile_matrix[r][c].get_position().x
 
                     elif self.tile_matrix[r][c].get_position().x > 12:
-                        for j in range(12 - self.tile_matrix[r][c].get_position().x):
+                        for j in range(- (12 - self.tile_matrix[r][c].get_position().x)):
                             current_tetromino.move("left", game_grid)
                         #if self.tile_matrix[r][c].get_position().x - 11 > padding:
                             #padding = 11 - self.tile_matrix[r][c].get_position().x
