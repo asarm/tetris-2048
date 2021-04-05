@@ -48,6 +48,9 @@ def start():
             # move the tetromino down by one 
             # (causes the tetromino to fall down faster)
             current_tetromino.move(key_typed, grid)
+          elif key_typed == "up":
+            # rotate the tetromino
+            current_tetromino.rotation(grid, current_tetromino)
          # clear the queue that stores all the keys pressed/typed
          stddraw.clearKeysTyped()
 
