@@ -48,10 +48,10 @@ class Game:
                # move the tetromino down by one
                # (causes the tetromino to fall down faster)
                current_tetromino.move(key_typed, grid)
-            elif key_typed == "a":
-               # move the tetromino right by one
-               current_tetromino.rotation(key_typed, grid, self.rotated, self.random_type)
-               self.rotated = not self.rotated
+            elif key_typed == "up":
+               # rotate the tetromino
+               current_tetromino.rotation(grid, current_tetromino)
+
             # clear the queue that stores all the keys pressed/typed
             stddraw.clearKeysTyped()
 
@@ -81,8 +81,7 @@ class Game:
    def create_tetromino(self, grid_height, grid_width):
       self.rotated = False
       # type (shape) of the tetromino is determined randomly
-      #tetromino_types = ['I', 'O', 'Z', 'J', 'L', 'T', 'S']
-      tetromino_types = ['I']
+      tetromino_types = ['I', 'O', 'Z', 'J', 'L', 'T', 'S']
       random_index = random.randint(0, len(tetromino_types) - 1)
       self.random_type = tetromino_types[random_index]
       # create and return the tetromino
@@ -135,7 +134,7 @@ class Game:
 
 
 
-# start() function is specified as the entry point (main function) from which 
+# start() function is specified as the entry point (main function) from which
 # the program starts execution
 game = Game()
 game.start()
