@@ -83,7 +83,9 @@ class Game:
                   for a in range(index, 19):
                      row = np.copy(grid.tile_matrix[a+1])
                      grid.tile_matrix[a] = row
-
+                     for b in range(12):
+                         if grid.tile_matrix[a][b] != None:
+                             grid.tile_matrix[a][b].move(0, -1)
                   '''
                   for r in range(20):
                      for c in range(11):
