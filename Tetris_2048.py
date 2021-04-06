@@ -70,7 +70,6 @@ class Game:
                 for i in range(12):
                     row_count.append(False)
 
-                high = 0
                 for h in range(grid_h):
                     counter = 0
                     for w in range(grid_w):
@@ -78,20 +77,15 @@ class Game:
                             counter += 1
                         if counter == 12:
                             row_count[h] = True
-                            high = h
-
+                    
                 for index, i in enumerate(row_count):
                     if i:
-                        for a in range(high, 19):
+                        for a in range(index, 19):
                             row = np.copy(grid.tile_matrix[a + 1])
                             grid.tile_matrix[a] = row
                             for b in range(12):
                                 if grid.tile_matrix[a][b] != None:
                                     grid.tile_matrix[a][b].move(0, -1)
-                                    high -= 1
-
-                        row_count[index] = False
-                        high = 0
 
             # end the main game loop if the game is over
             if game_over:
