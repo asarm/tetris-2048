@@ -66,39 +66,32 @@ class Game:
             # update the game grid by adding the tiles of the tetromino
             game_over = grid.update_grid(tiles_to_place)
 
-            row_count = []
-            for i in range(12):
-               row_count.append(False)
+                row_count = []
+                for i in range(12):
+                    row_count.append(False)
 
-            for h in range(grid_h):
-               counter = 0
-               for w in range(grid_w):
-                  if grid.is_occupied(h,w):
-                     counter+=1
-                  if counter == 12:
-                     row_count[h] = True
+                high = 0
+                for h in range(grid_h):
+                    counter = 0
+                    for w in range(grid_w):
+                        if grid.is_occupied(h, w):
+                            counter += 1
+                        if counter == 12:
+                            row_count[h] = True
+                            high = h
 
-            for index, i in enumerate(row_count):
-               if i:
-                  for a in range(index, 19):
-                     row = np.copy(grid.tile_matrix[a+1])
-                     grid.tile_matrix[a] = row
-                     for b in range(12):
-                         if grid.tile_matrix[a][b] != None:
-                             grid.tile_matrix[a][b].move(0, -1)
-                  '''
-                  for r in range(20):
-                     for c in range(11):
-                        grid.tile_matrix[c][r] = grid.tile_matrix[c][r+1]
-                  '''
-                  '''for c in range(11):
-                     grid.tile_matrix[index][c] = None
-                     for tile in range(0, (12-index)):
-                        if grid.tile_matrix[tile][c+1] != None:
-                           grid.tile_matrix[tile][c+1].move(0, -1)
-                           grid.tile_matrix[tile][c] = None'''
+                for index, i in enumerate(row_count):
+                    if i:
+                        for a in range(high, 19):
+                            row = np.copy(grid.tile_matrix[a + 1])
+                            grid.tile_matrix[a] = row
+                            for b in range(12):
+                                if grid.tile_matrix[a][b] != None:
+                                    grid.tile_matrix[a][b].move(0, -1)
+                                    high -= 1
 
-                  row_count[index] = False
+                        row_count[index] = False
+                        high = 0
 
             # end the main game loop if the game is over
             if game_over:
