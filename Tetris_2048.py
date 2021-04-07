@@ -64,6 +64,15 @@ class Game:
             tiles_to_place = current_tetromino.tile_matrix
             # update the game grid by adding the tiles of the tetromino
             game_over = grid.update_grid(tiles_to_place)
+            row_count = self.is_full(grid_h, grid_w, grid)
+            index = 0
+                while index < grid_h:
+                    while row_count[index]:
+                        print(row_count)
+                        self.slide_down(row_count, grid)
+                        row_count = self.is_full(grid_h, grid_w, grid)
+                        print(row_count)
+                    index += 1
             # end the main game loop if the game is over
             if game_over:
                break
@@ -76,6 +85,27 @@ class Game:
          grid.display()
 
       print("Game over")
+   def is_full(self, grid_h, grid_w, grid):
+        row_count = [False for i in range(grid_h)]
+        for h in range(grid_h):
+            counter = 0
+            for w in range(grid_w):
+                if grid.is_occupied(h, w):
+                    counter += 1
+                if counter == 12:
+                    row_count[h] = True
+        return row_count
+
+    def slide_down(self, row_count, grid):
+        for index, i in enumerate(row_count):
+            if i:
+                for a in range(index, 19):
+                    row = np.copy(grid.tile_matrix[a + 1])
+                    grid.tile_matrix[a] = row
+                    for b in range(12):
+                        if grid.tile_matrix[a][b] is not None:
+                            grid.tile_matrix[a][b].move(0, -1)
+                break
 
    # Function for creating random shaped tetrominoes to enter the game grid
    def create_tetromino(self, grid_height, grid_width):
