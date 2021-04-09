@@ -28,10 +28,10 @@ class Game:
         # by using the create_tetromino function defined below
         current_tetromino = self.create_tetromino(grid_h, grid_w)
         grid.current_tetromino = current_tetromino
-
+        self.restart = False
         # display a simple menu before opening the game
-        self.display_game_menu(grid_h, grid_w)
-
+        self.display_game_menu(grid_h, grid_w, self.restart)
+        paused = False
         # main game loop (keyboard interaction for moving the tetromino)
         while True:
             # check user interactions via the keyboard
@@ -53,12 +53,16 @@ class Game:
                 elif key_typed == "up":
                     # rotate the tetromino
                     current_tetromino.rotation(grid, current_tetromino)
+                elif key_typed == "p":
+                    print("Paused")
+                    paused = not paused
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
 
             # move (drop) the tetromino down by 1 at each iteration
-            success = current_tetromino.move("down", grid)
+            if not paused:
+                success = current_tetromino.move("down", grid)
 
             # place the tetromino on the game grid when it cannot go down anymore
             if not success:
@@ -70,16 +74,21 @@ class Game:
 
                 row_count = self.is_full(grid_h, grid_w, grid)
                 index = 0
+
+
                 while index < grid_h:
                     while row_count[index]:
-                        print(row_count)
                         self.slide_down(row_count, grid)
                         row_count = self.is_full(grid_h, grid_w, grid)
-                        print(row_count)
                     index += 1
 
                 if game_over:
-                    break
+                    for a in range(0, 20):
+                        for b in range(12):
+                                grid.tile_matrix[a][b] = None
+                    self.restart = True
+                    self.display_game_menu(grid_h, grid_w, self.restart)
+                    # break
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
                 current_tetromino = self.create_tetromino(grid_h, grid_w)
@@ -88,7 +97,7 @@ class Game:
             # display the game grid and as well the current tetromino
             grid.display()
 
-        print("Game over")
+        # print("Game over")
 
     def is_full(self, grid_h, grid_w, grid):
         row_count = [False for i in range(grid_h)]
@@ -117,7 +126,6 @@ class Game:
         self.rotated = False
         # type (shape) of the tetromino is determined randomly
         tetromino_types = ['I', 'O', 'Z', 'J', 'L', 'T', 'S']
-        # tetromino_types = ['I', 'O']
         random_index = random.randint(0, len(tetromino_types) - 1)
         self.random_type = tetromino_types[random_index]
         # create and return the tetromino
@@ -125,7 +133,7 @@ class Game:
         return tetromino
 
     # Function for displaying a simple menu before starting the game
-    def display_game_menu(self, grid_height, grid_width):
+    def display_game_menu(self, grid_height, grid_width, restart):
         # colors used for the menu
         background_color = Color(42, 69, 99)
         button_color = Color(25, 255, 228)
@@ -153,7 +161,10 @@ class Game:
         stddraw.setFontFamily("Arial")
         stddraw.setFontSize(25)
         stddraw.setPenColor(text_color)
-        text_to_display = "Click Here to Start the Game"
+        if restart:
+            text_to_display = "Restart"
+        else:
+            text_to_display = "Click Here to Start the Game"
         stddraw.text(img_center_x, 5, text_to_display)
         # menu interaction loop
         while True:
