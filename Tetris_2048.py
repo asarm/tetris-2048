@@ -22,18 +22,29 @@ class Game:
         stddraw.setXscale(-0.5, grid_w - 0.5)
         stddraw.setYscale(-0.5, grid_h - 0.5)
 
+
         # create the game grid
         grid = GameGrid(grid_h, grid_w)
+
         # create the first tetromino to enter the game grid
         # by using the create_tetromino function defined below
         current_tetromino = self.create_tetromino(grid_h, grid_w)
         grid.current_tetromino = current_tetromino
         self.restart = False
+        self.is_paused = False
+        is_finished = False
         # display a simple menu before opening the game
-        self.display_game_menu(grid_h, grid_w, self.restart)
-        paused = False
+        self.display_game_menu(grid_h, grid_w)
         # main game loop (keyboard interaction for moving the tetromino)
         while True:
+            # Checks if the user paused the game
+            if stddraw.mousePressed():
+                if stddraw.mouseX() <= 10.5 + 0.6 and stddraw.mouseX() >= 10.5 - 0.6:
+                    if stddraw.mouseY() <= 18.5 + 0.6 and stddraw.mouseY() >= 10.8 - 0.6:
+                        self.is_paused = True
+                        self.display_game_menu(grid_h, grid_w, is_paused=self.is_paused, is_finished=is_finished)
+                        print("Stopped")
+
             # check user interactions via the keyboard
             if stddraw.hasNextKeyTyped():
                 key_typed = stddraw.nextKeyTyped()
@@ -55,13 +66,14 @@ class Game:
                     current_tetromino.rotation(grid, current_tetromino)
                 elif key_typed == "p":
                     print("Paused")
-                    paused = not paused
+                    self.is_paused = not self.is_paused
+                    self.display_game_menu(grid_h, grid_w, is_paused=self.is_paused, is_finished=is_finished)
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
 
-            # move (drop) the tetromino down by 1 at each iteration
-            if not paused:
+            if not self.is_paused:
+                # move (drop) the tetromino down by 1 at each iteration
                 success = current_tetromino.move("down", grid)
 
             # place the tetromino on the game grid when it cannot go down anymore
@@ -75,7 +87,6 @@ class Game:
                 row_count = self.is_full(grid_h, grid_w, grid)
                 index = 0
 
-
                 while index < grid_h:
                     while row_count[index]:
                         self.slide_down(row_count, grid)
@@ -83,16 +94,25 @@ class Game:
                     index += 1
 
                 if game_over:
-                    for a in range(0, 20):
-                        for b in range(12):
-                                grid.tile_matrix[a][b] = None
+                    print("Game Over")
                     self.restart = True
-                    self.display_game_menu(grid_h, grid_w, self.restart)
-                    # break
+                    self.display_game_menu(grid_h, grid_w, is_finished=True)
+                    break
+
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
                 current_tetromino = self.create_tetromino(grid_h, grid_w)
                 grid.current_tetromino = current_tetromino
+
+            if self.restart:
+                print("Restart")
+                for a in range(0, 20):
+                    for b in range(12):
+                        grid.tile_matrix[a][b] = None
+
+                current_tetromino = self.create_tetromino(grid_h, grid_w)
+                grid.current_tetromino = current_tetromino
+                self.restart = False
 
             # display the game grid and as well the current tetromino
             grid.display()
@@ -133,7 +153,7 @@ class Game:
         return tetromino
 
     # Function for displaying a simple menu before starting the game
-    def display_game_menu(self, grid_height, grid_width, restart):
+    def display_game_menu(self, grid_height, grid_width, is_paused = False, is_finished=True):
         # colors used for the menu
         background_color = Color(42, 69, 99)
         button_color = Color(25, 255, 228)
@@ -161,24 +181,66 @@ class Game:
         stddraw.setFontFamily("Arial")
         stddraw.setFontSize(25)
         stddraw.setPenColor(text_color)
-        if restart:
-            text_to_display = "Restart"
-        else:
-            text_to_display = "Click Here to Start the Game"
-        stddraw.text(img_center_x, 5, text_to_display)
-        # menu interaction loop
-        while True:
-            # display the menu and wait for a short time (50 ms)
-            stddraw.show(50)
-            # check if the mouse has been left-clicked
-            if stddraw.mousePressed():
-                # get the x and y coordinates of the location at which the mouse has
-                # most recently been left-clicked
-                mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
-                if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-                    if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
-                        break  # break the loop to end the method and start the game
 
+        if not is_finished and is_paused:
+            stddraw.setPenColor(button_color)
+            button2_blc_x, button2_blc_y = img_center_x - button_w / 2, 1
+            stddraw.filledRectangle(button_blc_x, button_blc_y - 3, button_w, button_h)
+            stddraw.setFontFamily("Arial")
+            stddraw.setFontSize(25)
+            stddraw.setPenColor(text_color)
+
+            text_to_display = "Continue"
+            stddraw.text(img_center_x, 5, text_to_display)
+
+            text1_to_display = "Restart"
+            stddraw.text(img_center_x, 2, text1_to_display)
+            while True:
+                stddraw.show(50)
+                if stddraw.mousePressed():
+                    # get the x and y coordinates of the location at which the mouse has
+                    # most recently been left-clicked
+                    mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+                    if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                        if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                            self.is_paused = False
+                            break
+                        elif mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
+                            self.restart = True
+                            self.is_paused = False
+                            break
+
+        elif is_finished and self.restart:
+            print(self.restart)
+            text1_to_display = "Restart"
+            stddraw.text(img_center_x, 5, text1_to_display)
+            while True:
+                stddraw.show(50)
+                if stddraw.mousePressed():
+                    # get the x and y coordinates of the location at which the mouse has
+                    # most recently been left-clicked
+                    mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+                    if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                        if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                            self.restart = True
+                            self.is_paused = False
+                            break
+
+        else:
+            text1_to_display = "Start Game"
+            stddraw.text(img_center_x, 5, text1_to_display)
+            # menu interaction loop
+            while True:
+                # display the menu and wait for a short time (50 ms)
+                stddraw.show(50)
+                # check if the mouse has been left-clicked
+                if stddraw.mousePressed():
+                    # get the x and y coordinates of the location at which the mouse has
+                    # most recently been left-clicked
+                    mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+                    if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                        if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                            break  # break the loop to end the method and start the game
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution

@@ -16,10 +16,10 @@ class GameGrid:
       # game_over flag shows whether the game is over/completed or not
       self.game_over = False
       # set the color used for the empty grid cells
-      self.empty_cell_color = Color(42, 69, 99)
+      self.empty_cell_color = Color(15, 15, 15)
       # set the colors used for the grid lines and the grid boundaries
-      self.line_color = Color(0, 100, 200) 
-      self.boundary_color = Color(0, 100, 200)
+      self.line_color = Color(54, 54, 54)
+      self.boundary_color = Color(28, 15, 69)
       # thickness values used for the grid lines and the grid boundaries 
       self.line_thickness = 0.002
       self.box_thickness = 8 * self.line_thickness
@@ -45,7 +45,16 @@ class GameGrid:
          for col in range(self.grid_width):
             # draw the tile if the grid cell is occupied by a tile
             if self.tile_matrix[row][col] != None:
-               self.tile_matrix[row][col].draw() 
+               self.tile_matrix[row][col].draw()
+
+      # stop button
+      stddraw.setPenColor(Color(25, 255, 228))
+      stddraw.filledRectangle(10.5, 18.5, .6, .6)
+      stddraw.setPenRadius(100)
+      stddraw.setPenColor(Color(195, 50, 50))
+      text_to_display = "||"
+      stddraw.text(10.8, 18.8, text_to_display)
+
       # draw the inner lines of the grid
       stddraw.setPenColor(self.line_color)
       stddraw.setPenRadius(self.line_thickness)
