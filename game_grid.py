@@ -48,10 +48,10 @@ class GameGrid:
                self.tile_matrix[row][col].draw()
 
       # stop button
-      stddraw.setPenColor(Color(25, 255, 228))
+      stddraw.setPenColor(Color(230, 79, 79))
       stddraw.filledRectangle(10.5, 18.5, .6, .6)
       stddraw.setPenRadius(100)
-      stddraw.setPenColor(Color(195, 50, 50))
+      stddraw.setPenColor(Color(255, 255, 255))
       text_to_display = "||"
       stddraw.text(10.8, 18.8, text_to_display)
 
