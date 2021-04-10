@@ -32,7 +32,8 @@ class Game:
         grid.current_tetromino = current_tetromino
         self.restart = False
         self.is_paused = False
-        is_finished = False
+        self.is_finished = False
+        self.game_over = False
         # display a simple menu before opening the game
         self.display_game_menu(grid_h, grid_w)
         # main game loop (keyboard interaction for moving the tetromino)
@@ -42,8 +43,8 @@ class Game:
                 if stddraw.mouseX() <= 10.5 + 0.6 and stddraw.mouseX() >= 10.5 - 0.6:
                     if stddraw.mouseY() <= 18.5 + 0.6 and stddraw.mouseY() >= 10.8 - 0.6:
                         self.is_paused = True
-                        self.display_game_menu(grid_h, grid_w, is_paused=self.is_paused, is_finished=is_finished)
                         print("Stopped")
+                        self.display_game_menu(grid_h, grid_w)
 
             # check user interactions via the keyboard
             if stddraw.hasNextKeyTyped():
@@ -67,7 +68,7 @@ class Game:
                 elif key_typed == "p":
                     print("Paused")
                     self.is_paused = not self.is_paused
-                    self.display_game_menu(grid_h, grid_w, is_paused=self.is_paused, is_finished=is_finished)
+                    self.display_game_menu(grid_h, grid_w)
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
@@ -81,7 +82,7 @@ class Game:
                 # get the tile matrix of the tetromino
                 tiles_to_place = current_tetromino.tile_matrix
                 # update the game grid by adding the tiles of the tetromino
-                game_over = grid.update_grid(tiles_to_place)
+                self.game_over = grid.update_grid(tiles_to_place)
                 # end the main game loop if the game is over
 
                 row_count = self.is_full(grid_h, grid_w, grid)
@@ -93,11 +94,10 @@ class Game:
                         row_count = self.is_full(grid_h, grid_w, grid)
                     index += 1
 
-                if game_over:
+                if self.game_over:
                     print("Game Over")
-                    self.restart = True
-                    self.display_game_menu(grid_h, grid_w, is_finished=True)
-                    break
+                    self.is_finished = True
+                    self.display_game_menu(grid_h, grid_w)
 
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
@@ -109,10 +109,11 @@ class Game:
                 for a in range(0, 20):
                     for b in range(12):
                         grid.tile_matrix[a][b] = None
+                self.restart = False
+                grid.game_over = False
 
                 current_tetromino = self.create_tetromino(grid_h, grid_w)
                 grid.current_tetromino = current_tetromino
-                self.restart = False
 
             # display the game grid and as well the current tetromino
             grid.display()
@@ -153,7 +154,7 @@ class Game:
         return tetromino
 
     # Function for displaying a simple menu before starting the game
-    def display_game_menu(self, grid_height, grid_width, is_paused = False, is_finished=True):
+    def display_game_menu(self, grid_height, grid_width):
         # colors used for the menu
         background_color = Color(42, 69, 99)
         button_color = Color(25, 255, 228)
@@ -182,7 +183,7 @@ class Game:
         stddraw.setFontSize(25)
         stddraw.setPenColor(text_color)
 
-        if not is_finished and is_paused:
+        if not self.is_finished and self.is_paused:
             stddraw.setPenColor(button_color)
             button2_blc_x, button2_blc_y = img_center_x - button_w / 2, 1
             stddraw.filledRectangle(button_blc_x, button_blc_y - 3, button_w, button_h)
@@ -210,8 +211,10 @@ class Game:
                             self.is_paused = False
                             break
 
-        elif is_finished and self.restart:
-            print(self.restart)
+        elif self.is_finished:
+            stddraw.setPenColor(Color(232, 38, 38))
+            stddraw.text(img_center_x, 8, "Game Over")
+            stddraw.setPenColor(text_color)
             text1_to_display = "Restart"
             stddraw.text(img_center_x, 5, text1_to_display)
             while True:
@@ -224,6 +227,9 @@ class Game:
                         if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                             self.restart = True
                             self.is_paused = False
+                            self.is_finished = False
+                            self.game_over = False
+                            print(self.game_over, self.is_finished)
                             break
 
         else:
