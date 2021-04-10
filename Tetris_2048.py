@@ -68,7 +68,7 @@ class Game:
                 elif key_typed == "p":
                     print("Paused")
                     self.is_paused = not self.is_paused
-                    self.display_game_menu(grid_h, grid_w)
+                    #self.display_game_menu(grid_h, grid_w)
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
@@ -98,15 +98,17 @@ class Game:
 
                 while is_checking:
                     if not self.check_merging(grid):
+                        for a in range(0, 19):
+                            for b in range(11):
+                                if grid.tile_matrix[a][b] != None:
+                                    if grid.tile_matrix[a + 1][b] == None and grid.tile_matrix[a - 1][b] == None and \
+                                            grid.tile_matrix[a][b + 1] == None and grid.tile_matrix[a][b - 1] == None:
+                                        print("Removed score", grid.tile_matrix[a][b].number)
+                                        grid.tile_matrix[a][b].set_position(None)
+                                        grid.tile_matrix[a][b] = None
                         break
 
-                for a in range(0, 19):
-                    for b in range(11):
-                        if grid.tile_matrix[a][b] != None:
-                            if grid.tile_matrix[a + 1][b] == None and grid.tile_matrix[a - 1][b] == None and grid.tile_matrix[a][b + 1] == None and grid.tile_matrix[a][b - 1] == None:
-                                 print("Score", grid.tile_matrix[a][b].number)
-                                 grid.tile_matrix[a][b].set_position(None)
-                                 grid.tile_matrix[a][b] = None
+
 
 
                 if self.game_over:
@@ -138,7 +140,7 @@ class Game:
     def check_merging(self, grid):
         merged = False
         for a in range(0, 19):
-            for b in range(11):
+            for b in range(12):
                 if grid.tile_matrix[a][b] != None and grid.tile_matrix[a + 1][b] != None:
                     if grid.tile_matrix[a][b].number == grid.tile_matrix[a + 1][b].number:
                         grid.tile_matrix[a + 1][b].set_position(None)
