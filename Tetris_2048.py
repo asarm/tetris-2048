@@ -87,22 +87,15 @@ class Game:
                 merge = self.check_merging(grid)
                 while merge:
                     merge = self.check_merging(grid)
-                labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                print(labels)
-                print(num_labels)
 
-                copy_matrix = np.copy(grid.tile_matrix)
-
+                """
                 for x in range(grid_h):
                     for y in range(grid_w):
                         if grid.tile_matrix[x, y] != None and labels[x, y] != 1 \
-                                and grid.tile_matrix[x, y].get_position().x != 0:
-                            grid.tile_matrix[x, y - 1] = copy_matrix[x, y]
-                            grid.tile_matrix[x, y - 1].move(0, -1)
-                            copy_matrix = np.copy(grid.tile_matrix)
+                                and grid.tile_matrix[x, y].get_position().y != 0:
+                                print("will move")
                         labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                        print("I'm here")
-
+                                """
                 row_count = self.is_full(grid_h, grid_w, grid)
                 index = 0
 
@@ -111,6 +104,28 @@ class Game:
                         self.slide_down(row_count, grid)
                         row_count = self.is_full(grid_h, grid_w, grid)
                     index += 1
+
+                labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
+                print(labels)
+                print(num_labels)
+                copy_matrix = np.copy(grid.tile_matrix)
+
+
+                for x in range(grid_h):
+                    for y in range(grid_w):
+                        if grid.tile_matrix[x - 1, y] is None and copy_matrix[x, y] is not None and labels[x, y] != 1\
+                                and x != 0:
+                            grid.tile_matrix[x - 1, y] = copy_matrix[x, y]
+                for x in range(grid_h):
+                    for y in range(grid_w):
+                        if grid.tile_matrix[x - 1, y] is None and copy_matrix[x, y] is not None and labels[x, y] != 1 \
+                                and x != 0:
+                            grid.tile_matrix[x, y].move(0, -1)
+                        labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
+                        copy_matrix = np.copy(grid.tile_matrix)
+
+                print("Sonra\n")
+                print(labels)
 
                 if self.game_over:
                     print("Game Over")
