@@ -114,6 +114,15 @@ class Game:
                 while merge:
                     merge = self.check_merging(grid)
 
+                row_count = self.is_full(grid_h, grid_w, grid)
+                index = 0
+
+                while index < grid_h:
+                    while row_count[index]:
+                        self.slide_down(row_count, grid)
+                        row_count = self.is_full(grid_h, grid_w, grid)
+                    index += 1
+
                 """
                 while num_free != 0:
                     labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
