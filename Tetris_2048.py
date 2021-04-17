@@ -158,6 +158,7 @@ class Game:
                         grid.tile_matrix[a + 1][b].set_position(None)
                         grid.tile_matrix[a + 1][b] = None
                         grid.tile_matrix[a][b].number += grid.tile_matrix[a][b].number
+                        grid.tile_matrix[a][b].updateColor(grid.tile_matrix[a][b].number)
                         merged = True
         return merged
 
