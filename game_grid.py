@@ -25,6 +25,8 @@ class GameGrid:
         self.line_thickness = 0.002
         self.box_thickness = 8 * self.line_thickness
 
+        self.score = 0
+
     # Method used for displaying the game grid
     def display(self):
         # clear the background canvas to empty_cell_color
@@ -53,14 +55,16 @@ class GameGrid:
         stddraw.filledRectangle(10.5, 18.5, .6, .6)
         stddraw.setPenRadius(100)
         stddraw.setPenColor(Color(255, 255, 255))
-        text_to_display = "||"
+        text_to_display = "| |"
         stddraw.text(10.8, 18.8, text_to_display)
+
+        self.drawScore(self.score)
 
         # draw the inner lines of the grid
         stddraw.setPenColor(self.line_color)
         stddraw.setPenRadius(self.line_thickness)
         # x and y ranges for the game grid
-        start_x, end_x = -0.5, self.grid_width - 0.5
+        start_x, end_x = -0.5, 12 - 0.5
         start_y, end_y = -0.5, self.grid_height - 0.5
         for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
             stddraw.line(x, start_y, x, end_y)
@@ -127,3 +131,9 @@ class GameGrid:
                     dx, dy = 0, -1  # change of the position in x and y directions
                     self.tile_matrix[row - 1][col].move(dx, dy)
                     self.tile_matrix[row][col] = None
+
+    def drawScore(self, score=0):
+        stddraw.setPenRadius(150)
+        stddraw.setPenColor(Color(255, 255, 255))
+        text_to_display = "Score: "+str(score)
+        stddraw.text(15.8, 18.8, text_to_display)

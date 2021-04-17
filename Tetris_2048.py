@@ -14,7 +14,8 @@ class Game:
     # Main function where this program starts execution
     def start(self):
         # set the dimensions of the game grid
-        grid_h, grid_w = 20, 12
+        grid_h, grid_w = 20, 20
+        game_w = 12
         # set the size of the drawing canvas
         canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
         stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -27,7 +28,7 @@ class Game:
 
         # create the first tetromino to enter the game grid
         # by using the create_tetromino function defined below
-        current_tetromino = self.create_tetromino(grid_h, grid_w)
+        current_tetromino = self.create_tetromino(grid_h, game_w)
         grid.current_tetromino = current_tetromino
         self.restart = False
         self.is_paused = False
@@ -67,7 +68,7 @@ class Game:
                 elif key_typed == "p":
                     print("Paused")
                     self.is_paused = not self.is_paused
-                    # self.display_game_menu(grid_h, grid_w)
+                    self.display_game_menu(grid_h, grid_w)
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
@@ -123,12 +124,6 @@ class Game:
                         row_count = self.is_full(grid_h, grid_w, grid)
                     index += 1
 
-                """
-                while num_free != 0:
-                    labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                    free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
-                    grid.move_free_tiles(free_tiles)
-                """
                 # print(labels)
                 # print(num_labels)
 
@@ -139,7 +134,7 @@ class Game:
 
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
-                current_tetromino = self.create_tetromino(grid_h, grid_w)
+                current_tetromino = self.create_tetromino(grid_h, game_w)
                 grid.current_tetromino = current_tetromino
 
             if self.restart:
@@ -167,6 +162,7 @@ class Game:
                         grid.tile_matrix[a + 1][b].set_position(None)
                         grid.tile_matrix[a + 1][b] = None
                         grid.tile_matrix[a][b].number += grid.tile_matrix[a][b].number
+                        grid.score += grid.tile_matrix[a][b].number
                         grid.tile_matrix[a][b].updateColor(grid.tile_matrix[a][b].number)
                         merged = True
         return merged
