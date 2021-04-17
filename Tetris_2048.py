@@ -35,7 +35,7 @@ class Game:
         self.is_finished = False
         self.game_over = False
         # display a simple menu before opening the game
-        self.display_game_menu(grid_h, grid_w)
+        self.display_game_menu(grid_h, grid_w, grid)
         # main game loop (keyboard interaction for moving the tetromino)
         while True:
             # Checks if the user paused the game
@@ -44,7 +44,7 @@ class Game:
                     if stddraw.mouseY() <= 18.5 + 0.6 and stddraw.mouseY() >= 10.8 - 0.6:
                         self.is_paused = True
                         print("Stopped")
-                        self.display_game_menu(grid_h, grid_w)
+                        self.display_game_menu(grid_h, grid_w, grid)
 
             # check user interactions via the keyboard
             if stddraw.hasNextKeyTyped():
@@ -68,7 +68,7 @@ class Game:
                 elif key_typed == "p":
                     print("Paused")
                     self.is_paused = not self.is_paused
-                    self.display_game_menu(grid_h, grid_w)
+                    self.display_game_menu(grid_h, grid_w, grid)
 
                 # clear the queue that stores all the keys pressed/typed
                 stddraw.clearKeysTyped()
@@ -130,7 +130,7 @@ class Game:
                 if self.game_over:
                     print("Game Over")
                     self.is_finished = True
-                    self.display_game_menu(grid_h, grid_w)
+                    self.display_game_menu(grid_h, grid_w, grid)
 
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
@@ -145,7 +145,7 @@ class Game:
                 self.restart = False
                 grid.game_over = False
 
-                current_tetromino = self.create_tetromino(grid_h, grid_w)
+                current_tetromino = self.create_tetromino(grid_h, game_w)
                 grid.current_tetromino = current_tetromino
 
             # display the game grid and as well the current tetromino
@@ -201,7 +201,7 @@ class Game:
         return tetromino
 
     # Function for displaying a simple menu before starting the game
-    def display_game_menu(self, grid_height, grid_width):
+    def display_game_menu(self, grid_height, grid_width, grid):
         # colors used for the menu
         background_color = Color(42, 69, 99)
         button_color = Color(25, 255, 228)
@@ -256,6 +256,7 @@ class Game:
                         elif mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
                             self.restart = True
                             self.is_paused = False
+                            grid.score = 0
                             break
 
         elif self.is_finished:
@@ -276,6 +277,7 @@ class Game:
                             self.is_paused = False
                             self.is_finished = False
                             self.game_over = False
+                            grid.score = 0
                             print(self.game_over, self.is_finished)
                             break
 
