@@ -1,4 +1,3 @@
-import cp as cp
 import numpy as np
 import stddraw  # the stddraw module is used as a basic graphics library
 import random  # used for creating tetrominoes with random types/shapes
@@ -102,11 +101,17 @@ class Game:
                 free_tiles = [[False for v in range(grid_w)] for b in range(grid_h)]
                 free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
                 grid.move_free_tiles(free_tiles)
+
+                while num_free != 0:
+                    labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
+                    free_tiles = [[False for v in range(grid_w)] for b in range(grid_h)]
+                    free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
+                    grid.move_free_tiles(free_tiles)
+
                 labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
                 merge = self.check_merging(grid)
                 while merge:
                     merge = self.check_merging(grid)
-
 
                 """
                 while num_free != 0:
