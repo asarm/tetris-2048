@@ -102,6 +102,7 @@ class Game:
                 free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
                 grid.move_free_tiles(free_tiles)
 
+
                 while num_free != 0:
                     labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
                     free_tiles = [[False for v in range(grid_w)] for b in range(grid_h)]
@@ -396,10 +397,13 @@ class Game:
 
     def find_free_tiles(self, grid_h, grid_w, labels, free_tiles):
         counter = 0
+        okay_labels = []
         for x in range(grid_h):
             for y in range(grid_w):
                 if labels[x, y] != 1 and labels[x, y] != 0:
-                    if x != 0:
+                    if x == 0:
+                        okay_labels.append(labels[x, y])
+                    if not okay_labels.count(labels[x, y]):
                         free_tiles[x][y] = True
                         counter += 1
         return free_tiles, counter
