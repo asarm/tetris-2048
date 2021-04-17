@@ -1,3 +1,4 @@
+import cp as cp
 import numpy as np
 import stddraw  # the stddraw module is used as a basic graphics library
 import random  # used for creating tetrominoes with random types/shapes
@@ -88,14 +89,6 @@ class Game:
                 while merge:
                     merge = self.check_merging(grid)
 
-                """
-                for x in range(grid_h):
-                    for y in range(grid_w):
-                        if grid.tile_matrix[x, y] != None and labels[x, y] != 1 \
-                                and grid.tile_matrix[x, y].get_position().y != 0:
-                                print("will move")
-                        labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                                """
                 row_count = self.is_full(grid_h, grid_w, grid)
                 index = 0
 
@@ -106,26 +99,23 @@ class Game:
                     index += 1
 
                 labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                print(labels)
-                print(num_labels)
-                copy_matrix = np.copy(grid.tile_matrix)
+                free_tiles = [[False for v in range(grid_w)] for b in range(grid_h)]
+                free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
+                grid.move_free_tiles(free_tiles)
+                labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
+                merge = self.check_merging(grid)
+                while merge:
+                    merge = self.check_merging(grid)
 
 
-                for x in range(grid_h):
-                    for y in range(grid_w):
-                        if grid.tile_matrix[x - 1, y] is None and copy_matrix[x, y] is not None and labels[x, y] != 1\
-                                and x != 0:
-                            grid.tile_matrix[x - 1, y] = copy_matrix[x, y]
-                for x in range(grid_h):
-                    for y in range(grid_w):
-                        if grid.tile_matrix[x - 1, y] is None and copy_matrix[x, y] is not None and labels[x, y] != 1 \
-                                and x != 0:
-                            grid.tile_matrix[x, y].move(0, -1)
-                        labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
-                        copy_matrix = np.copy(grid.tile_matrix)
-
-                print("Sonra\n")
-                print(labels)
+                """
+                while num_free != 0:
+                    labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
+                    free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
+                    grid.move_free_tiles(free_tiles)
+                """
+                # print(labels)
+                # print(num_labels)
 
                 if self.game_over:
                     print("Game Over")
@@ -399,6 +389,15 @@ class Game:
             new_label = new_labels[old_label]
             min_equivalent_labels[ind] = new_label
 
+    def find_free_tiles(self, grid_h, grid_w, labels, free_tiles):
+        counter = 0
+        for x in range(grid_h):
+            for y in range(grid_w):
+                if labels[x, y] != 1 and labels[x, y] != 0:
+                    if x != 0:
+                        free_tiles[x][y] = True
+                        counter += 1
+        return free_tiles, counter
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
