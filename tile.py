@@ -19,12 +19,12 @@ class Tile:
    def __init__(self, position = Point(0, 0)): # (0, 0) is the default position
       # assign the number on the tile
       numbers = [2, 4]
-      # numbers = [int(math.pow(2,num)) for num in range(2, 15)]
-      # colors = [Color(245, 245, 220), Color(99, 184, 50)]
-      num = int(np.random.choice(numbers, 1))
-      self.number = num
+      self.colors = [Color(239, 230, 221), Color(239, 227, 205), Color(247,178,123), Color(247,150,99), Color(247,124,90),
+                Color(247,93,59), Color(239,205,115), Color(239,206,99), Color(239,198,82), Color(238,198,66), Color(239,194,49), Color(60,58,51)]
+      self.num = int(np.random.choice(numbers, 1))
+      self.number = self.num
       # set the colors of the tile
-      self.background_color = Color(numbers.index(num)*13, numbers.index(num)*15, numbers.index(num)*15) # background (tile) color
+      self.background_color = self.colors[int(math.log2(self.num))-1] # background (tile) color
       self.foreground_color = Color(0, 100, 200) # foreground (number) color
       self.boundary_color = Color(0, 100, 200) # boundary (box) color
       # set the position of the tile as the given position
@@ -59,3 +59,6 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x, self.position.y, str(self.number))
+
+   def updateColor(self, num):
+      self.background_color = self.colors[int(math.log2(num)) - 1]
