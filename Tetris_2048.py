@@ -152,19 +152,20 @@ class Game:
 
                 # create the next tetromino to enter the game grid
                 # by using the create_tetromino function defined below
+
                 self.round_count += 1
-                if self.round_count == 8:
-                    self.tetrominos = list()
-                    self.round_count = 0
-                    self.create_tetromino(grid_h, game_w)
 
                 current_tetromino = self.tetrominos[self.round_count]
                 grid.current_tetromino = current_tetromino
                 new_x, new_y = random.randint(0, 9), 21
                 current_tetromino.move_pos(new_x, new_y)
-                self.next_type = self.tetrominos[self.round_count+1]
-                self.next_type.move_pos(15, 15)
 
+                if self.round_count == 8:
+                    self.tetrominos = list()
+                    self.round_count = 0
+                    self.create_tetromino(grid_h, game_w)
+                self.next_type = self.tetrominos[self.round_count + 1]
+                self.next_type.move_pos(15, 15)
             if self.restart:
                 for a in range(0, 20):
                     for b in range(12):
@@ -195,13 +196,20 @@ class Game:
 
     def is_full(self, grid_h, grid_w, grid):
         row_count = [False for i in range(grid_h)]
+        score = 0
         for h in range(grid_h):
             counter = 0
             for w in range(grid_w):
                 if grid.is_occupied(h, w):
                     counter += 1
                 if counter == 12:
+                    score = 0
+                    for a in range(12):
+                        score += grid.tile_matrix[h][a].number
+                        print(grid.tile_matrix[h][a].number)
                     row_count[h] = True
+        print(score)
+        grid.score += score
         return row_count
 
     def slide_down(self, row_count, grid):
