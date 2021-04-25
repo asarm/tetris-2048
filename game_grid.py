@@ -30,6 +30,7 @@ class GameGrid:
         self.box_thickness = 8 * self.line_thickness
         self.score = 0
         self.next_tetromino = None
+        self.pos = Point()
 
     # Method used for displaying the game grid
     def display(self):
@@ -40,11 +41,7 @@ class GameGrid:
         # draw the current (active) tetromino
         if self.current_tetromino != None and self.next_tetromino != None:
             self.current_tetromino.draw()
-
-            '''
-            if self.next_tetromino != None:
-                self.next_tetromino.draw_next()
-            '''
+            self.next_tetromino.draw()
 
         # draw a box around the game grid
         self.draw_boundaries()
@@ -70,8 +67,6 @@ class GameGrid:
         stddraw.text(10.8, 18.8, text_to_display)
 
         self.drawScore(self.score)
-        self.draw_next()
-        self.drawNext()
 
         # draw the inner lines of the grid
         stddraw.setPenColor(self.line_color)
@@ -152,34 +147,17 @@ class GameGrid:
         text_to_display = "Score: "+str(score)
         stddraw.text(15.8, 18.8, text_to_display)
 
-    def drawNext(self):
-        stddraw.setPenRadius(150)
-        stddraw.setPenColor(Color(255, 255, 255))
-        text = "Next:"
-        stddraw.text(15.8, 15.5, text)
-
     def set_next(self, next_tetromino):
         self.next_tetromino = next_tetromino
 
     def draw_next(self):
         print(self.next_tetromino.type)
-        n = len(self.next_tetromino.tile_matrix)  # n = number of rows = number of columns
-        for row in range(n):
-            for col in range(n):
-                # draw each occupied tile (not equal to None) on the game grid
-                if self.next_tetromino.tile_matrix[row][col] != None:
-                    # considering newly entered tetrominoes to the game grid that may
-                    # have tiles with position.y >= grid_height
-                    self.next_tetromino.bottom_left_corner = Point()
-                    self.next_tetromino.bottom_left_corner.y = 13.8
-                    self.next_tetromino.bottom_left_corner.x = 15.8
-                    for i in range(len(self.next_tetromino.occupied_tiles)):
-                        col_index, row_index = self.next_tetromino.occupied_tiles[i][0], self.next_tetromino.occupied_tiles[i][1]
-                        position = Point()
-                        # horizontal position of the tile
-                        position.x = self.next_tetromino.bottom_left_corner.x + col_index
-                        # vertical position of the tile
-                        position.y = self.next_tetromino.bottom_left_corner.y + (n - 1) - row_index
-                        # create the tile on the computed position
-                        self.next_tetromino.tile_matrix[row_index][col_index] = Tile(position)
-                    self.next_tetromino.draw()
+        n = len(self.next_tetromino.occupied_tiles)
+        pos = Point()
+        pos.x = 13
+        pos.y = 13
+        for i in range(10, 15):
+            for j in range(10, 15):
+                self.tile_matrix[i][j] = None
+        self.next_tetromino.move_pos(13,13)
+        # self.next_tetromino.tile_matrix[0][1].set_position(pos)

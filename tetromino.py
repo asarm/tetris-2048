@@ -2,12 +2,13 @@ import random  # each tetromino is created with a random x value above the grid
 from tile import Tile  # used for representing each tile on the tetromino
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
+import math
 
 # Class used for representing tetrominoes with 3 out of 7 different types/shapes
 # as (I, O and Z)
 class Tetromino:
     # Constructor to create a tetromino with a given type (shape)
-    def __init__(self, type, grid_height, grid_width, is_next=False):
+    def __init__(self, type, grid_height, grid_width):
         self.type = type
         # set grid_height and grid_width from input parameters
         self.grid_height = grid_height
@@ -87,7 +88,6 @@ class Tetromino:
 
     # Method for drawing the tetromino on the game grid
     def draw(self):
-        print("DRAW")
         n = len(self.tile_matrix)  # n = number of rows = number of columns
         for row in range(n):
             for col in range(n):
@@ -98,7 +98,6 @@ class Tetromino:
                     position = self.tile_matrix[row][col].get_position()
                     if position.y < self.grid_height:
                         self.tile_matrix[row][col].draw()
-
                         # Method for moving the tetromino in a given direction by 1 on the game grid
 
     def move(self, direction, game_grid):
@@ -290,7 +289,6 @@ class Tetromino:
 
     # Method for drawing the tetromino on the game grid
     def draw(self):
-        print("DRAW")
         n = len(self.tile_matrix)  # n = number of rows = number of columns
         for row in range(n):
             for col in range(n):
@@ -328,6 +326,26 @@ class Tetromino:
                     else:  # direction == "down"
                         self.tile_matrix[row][col].move(0, -1)
         return True  # successful move in the given direction
+
+    def move_pos(self, dx, dy):
+        pivot_point = Point()
+        n = self.tile_matrix.shape
+        if self.tile_matrix[0][0] != None:
+            pivot_point.x = self.tile_matrix[0][0].get_position().x
+            pivot_point.y = self.tile_matrix[0][0].get_position().y
+        else:
+            pivot_point.x = self.tile_matrix[0][1].get_position().x
+            pivot_point.y = self.tile_matrix[0][1].get_position().y
+
+        for m in self.tile_matrix:
+            for p in m:
+                if p != None:
+                    p.move(dx-pivot_point.x, dy-pivot_point.y)
+
+        for m in self.tile_matrix:
+            for p in m:
+                if p != None:
+                    pos = p.get_position()
 
     def rotation(self, game_grid, current_tetromino):
         n = len(self.tile_matrix)

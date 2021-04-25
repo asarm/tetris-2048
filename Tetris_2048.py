@@ -28,11 +28,10 @@ class Game:
         self.create_tetromino(grid_h, game_w)
 
         self.next_type = self.tetrominos[self.round_count + 1]
-        # self.next_type.draw_next()
+        self.next_type.move_pos(15, 15)
 
         # create the game grid
         grid = GameGrid(grid_h, grid_w)
-        # grid.next_tetromino = self.next_type
 
         # create the first tetromino to enter the game grid
         # by using the create_tetromino function defined below
@@ -47,7 +46,6 @@ class Game:
         # main game loop (keyboard interaction for moving the tetromino)
         while True:
             grid.set_next(self.tetrominos[self.round_count + 1])
-            grid.draw_next()
             # Checks if the user paused the game
             if stddraw.mousePressed():
                 if stddraw.mouseX() <= 10.5 + 0.6 and stddraw.mouseX() >= 10.5 - 0.6:
@@ -134,8 +132,6 @@ class Game:
                         row_count = self.is_full(grid_h, grid_w, grid)
                     index += 1
 
-                # print(labels)
-                # print(num_labels)
                 labels, num_labels = self.connected_component_labeling(grid.tile_matrix, grid_w, grid_h)
                 free_tiles = [[False for v in range(grid_w)] for b in range(grid_h)]
                 free_tiles, num_free = self.find_free_tiles(grid_h, grid_w, labels, free_tiles)
@@ -161,21 +157,24 @@ class Game:
                     self.tetrominos = list()
                     self.round_count = 0
                     self.create_tetromino(grid_h, game_w)
+
                 current_tetromino = self.tetrominos[self.round_count]
                 grid.current_tetromino = current_tetromino
-                grid.set_next(self.tetrominos[self.round_count+1])
-                grid.draw_next()
+                new_x, new_y = random.randint(0, 9), 21
+                current_tetromino.move_pos(new_x, new_y)
+                self.next_type = self.tetrominos[self.round_count+1]
+                self.next_type.move_pos(15, 15)
 
             if self.restart:
-                print("Restart")
                 for a in range(0, 20):
                     for b in range(12):
                         grid.tile_matrix[a][b] = None
                 self.restart = False
                 grid.game_over = False
-
                 current_tetromino = self.tetrominos[self.round_count]
                 grid.current_tetromino = current_tetromino
+                new_x, new_y = random.randint(0, 9), 22
+                current_tetromino.move_pos(new_x, new_y)
 
             # display the game grid and as well the current tetromino
             grid.display()
