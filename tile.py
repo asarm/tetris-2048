@@ -45,7 +45,9 @@ class Tile:
       self.position.translate(dx, dy)
 
    # Method for drawing the tile
-   def draw(self):
+   def draw(self, position = None):
+      if position is None:
+          position = self.position
       # draw the tile as a filled square
       stddraw.setPenColor(self.background_color)
       stddraw.filledSquare(self.position.x, self.position.y, 0.5)
