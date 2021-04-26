@@ -345,6 +345,7 @@ class Game:
                         elif mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
                             self.is_paused = False
                             grid.score = 0
+                            grid.speed_increased_counter = 0
                             self.restart = True
 
                             # Allows user to choice game speed
@@ -367,6 +368,7 @@ class Game:
                     if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
                         if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                             self.restart = True
+                            grid.speed_increased_counter = 0
                             self.is_paused = False
                             self.is_finished = False
                             self.game_over = False
