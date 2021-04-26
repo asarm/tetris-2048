@@ -39,6 +39,7 @@ class GameGrid:
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
+
     # Method used for displaying the game grid
     def display(self):
         self.change_speed()
@@ -65,7 +66,6 @@ class GameGrid:
                 if self.tile_matrix[row][col] != None:
                     self.tile_matrix[row][col].draw()
 
-
         # stop button
         stddraw.setPenColor(Color(230, 79, 79))
         stddraw.filledRectangle(10.5, 18.5, .6, .6)
@@ -80,7 +80,7 @@ class GameGrid:
         stddraw.setPenColor(self.line_color)
         stddraw.setPenRadius(self.line_thickness)
         # x and y ranges for the game grid
-        #start_x, end_x = -0.5, self.grid_width - 0.5
+        # start_x, end_x = -0.5, self.grid_width - 0.5
         start_x, end_x = -0.5, 12 - 0.5
         start_y, end_y = -0.5, self.grid_height - 0.5
         for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
@@ -152,7 +152,7 @@ class GameGrid:
     def drawScore(self, score=0):
         stddraw.setPenRadius(150)
         stddraw.setPenColor(Color(255, 255, 255))
-        text_to_display = "Score: "+str(score)
+        text_to_display = "Score: " + str(score)
         stddraw.text(15.8, 18.8, text_to_display)
 
     def set_next(self, next_tetromino):
@@ -161,9 +161,9 @@ class GameGrid:
     def play_sound(self):
         music = pygame.mixer.music.load(os.path.join('music.mp3'))
         pygame.mixer.music.play(-1)
-    
+
     def change_speed(self):
-        if self.last_updated > 500:
+        if self.last_updated > 500 and self.game_speed > 80:
             change_rate = int(self.game_speed * 0.05)
             print("Previous Speed", self.game_speed)
             self.game_speed -= change_rate
