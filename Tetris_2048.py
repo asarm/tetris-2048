@@ -175,7 +175,7 @@ class Game:
                 grid.game_over = False
                 current_tetromino = self.tetrominos[self.round_count]
                 grid.current_tetromino = current_tetromino
-                new_x, new_y = random.randint(0, 9), 22
+                new_x, new_y = random.randint(2, 9), 22
                 current_tetromino.move_pos(new_x, new_y)
 
             # display the game grid and as well the current tetromino
@@ -195,15 +195,22 @@ class Game:
                         merged = True
         return merged
 
+
     def is_full(self, grid_h, grid_w, grid):
         row_count = [False for i in range(grid_h)]
+        score = 0
         for h in range(grid_h):
             counter = 0
             for w in range(grid_w):
                 if grid.is_occupied(h, w):
                     counter += 1
                 if counter == 12:
+                    score = 0
+                    for a in range(12):
+                        score += grid.tile_matrix[h][a].number
+                        print(grid.tile_matrix[h][a].number)
                     row_count[h] = True
+        grid.score += score
         return row_count
 
     def slide_down(self, row_count, grid):
@@ -232,6 +239,7 @@ class Game:
 
     # Function for displaying a simple menu before starting the game
     def display_game_menu(self, grid_height, grid_width, grid):
+        play_music = False
         # colors used for the menu
         background_color = Color(42, 69, 99)
         button_color = Color(25, 255, 228)
@@ -284,9 +292,65 @@ class Game:
                             self.is_paused = False
                             break
                         elif mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
-                            self.restart = True
                             self.is_paused = False
                             grid.score = 0
+                            self.restart = True
+                            stddraw.clear(background_color)
+                            # center coordinates to display the image
+                            img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+                            # image is represented using the Picture class
+                            image_to_display = Picture(img_file)
+                            # display the image
+                            stddraw.picture(image_to_display, img_center_x, img_center_y)
+                            # dimensions of the start game button
+                            button_w, button_h = grid_width - 17, 2
+                            stddraw.setPenColor(button_color)
+                            # coordinates of the bottom left corner of the start game button
+                            button1_blc_x, button1_blc_y = img_center_x - button_w / 2, 4
+                            button2_blc_x, button2_blc_y = button1_blc_x - 5, 4
+                            button3_blc_x, button3_blc_y = button1_blc_x + 5, 4
+                            # display the start game button as a filled rectangle
+                            stddraw.filledRectangle(button1_blc_x, button1_blc_y, button_w, button_h)
+                            stddraw.filledRectangle(button2_blc_x, button2_blc_y, button_w, button_h)
+                            stddraw.filledRectangle(button3_blc_x, button3_blc_y, button_w, button_h)
+                            stddraw.setPenColor(Color(232, 38, 38))
+
+                            normal_speed_text = "Normal"
+                            stddraw.text(img_center_x, 5, normal_speed_text)
+
+                            fast_speed_text = "Slow"
+                            stddraw.text(img_center_x - 5, 5, fast_speed_text)
+
+                            text_to_display = "Fast"
+                            stddraw.text(img_center_x + 5, 5, text_to_display)
+
+                            while True:
+                                # display the menu and wait for a short time (50 ms)
+                                stddraw.show(50)
+                                # check if the mouse has been left-clicked
+                                if stddraw.mousePressed():
+                                    # get the x and y coordinates of the location at which the mouse has
+                                    # most recently been left-clicked
+                                    mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+
+                                    # Draws a frame per 175ms
+                                    if mouse_x >= button1_blc_x and mouse_x <= button1_blc_x + button_w:
+                                        if mouse_y >= button1_blc_y and mouse_y <= button1_blc_y + button_h:
+                                            print("Normal speed")
+                                            grid.game_speed = 175
+                                            break
+                                    # Draws a frame per 200ms
+                                    if mouse_x >= button2_blc_x and mouse_x <= button2_blc_x + button_w:
+                                        if mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
+                                            print("Slow speed")
+                                            grid.game_speed = 250
+                                            break
+                                    # Draws a frame per 150ms
+                                    if mouse_x >= button3_blc_x and mouse_x <= button3_blc_x + button_w:
+                                        if mouse_y >= button3_blc_y and mouse_y <= button3_blc_y + button_h:
+                                            print("Fast speed")
+                                            grid.game_speed = 120
+                                            break
                             break
 
         elif self.is_finished:
@@ -308,6 +372,63 @@ class Game:
                             self.is_finished = False
                             self.game_over = False
                             grid.score = 0
+
+                            stddraw.clear(background_color)
+                            # center coordinates to display the image
+                            img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+                            # image is represented using the Picture class
+                            image_to_display = Picture(img_file)
+                            # display the image
+                            stddraw.picture(image_to_display, img_center_x, img_center_y)
+                            # dimensions of the start game button
+                            button_w, button_h = grid_width - 17, 2
+                            stddraw.setPenColor(button_color)
+                            # coordinates of the bottom left corner of the start game button
+                            button1_blc_x, button1_blc_y = img_center_x - button_w / 2, 4
+                            button2_blc_x, button2_blc_y = button1_blc_x - 5, 4
+                            button3_blc_x, button3_blc_y = button1_blc_x + 5, 4
+                            # display the start game button as a filled rectangle
+                            stddraw.filledRectangle(button1_blc_x, button1_blc_y, button_w, button_h)
+                            stddraw.filledRectangle(button2_blc_x, button2_blc_y, button_w, button_h)
+                            stddraw.filledRectangle(button3_blc_x, button3_blc_y, button_w, button_h)
+                            stddraw.setPenColor(Color(232, 38, 38))
+
+                            normal_speed_text = "Normal"
+                            stddraw.text(img_center_x, 5, normal_speed_text)
+
+                            fast_speed_text = "Slow"
+                            stddraw.text(img_center_x - 5, 5, fast_speed_text)
+
+                            text_to_display = "Fast"
+                            stddraw.text(img_center_x + 5, 5, text_to_display)
+
+                            while True:
+                                # display the menu and wait for a short time (50 ms)
+                                stddraw.show(50)
+                                # check if the mouse has been left-clicked
+                                if stddraw.mousePressed():
+                                    # get the x and y coordinates of the location at which the mouse has
+                                    # most recently been left-clicked
+                                    mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+
+                                    # Draws a frame per 175ms
+                                    if mouse_x >= button1_blc_x and mouse_x <= button1_blc_x + button_w:
+                                        if mouse_y >= button1_blc_y and mouse_y <= button1_blc_y + button_h:
+                                            print("Normal speed")
+                                            grid.game_speed = 175
+                                            break
+                                    # Draws a frame per 200ms
+                                    if mouse_x >= button2_blc_x and mouse_x <= button2_blc_x + button_w:
+                                        if mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
+                                            print("Slow speed")
+                                            grid.game_speed = 250
+                                            break
+                                    # Draws a frame per 150ms
+                                    if mouse_x >= button3_blc_x and mouse_x <= button3_blc_x + button_w:
+                                        if mouse_y >= button3_blc_y and mouse_y <= button3_blc_y + button_h:
+                                            print("Fast speed")
+                                            grid.game_speed = 120
+                                            break
                             break
 
         else:
@@ -378,15 +499,16 @@ class Game:
                     if mouse_x >= button2_blc_x and mouse_x <= button2_blc_x + button_w:
                         if mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
                             print("Slow speed")
+                            grid.game_speed = 250
                             break
                     # Draws a frame per 150ms
                     if mouse_x >= button3_blc_x and mouse_x <= button3_blc_x + button_w:
                         if mouse_y >= button3_blc_y and mouse_y <= button3_blc_y + button_h:
                             print("Fast speed")
-                            grid.game_speed = 150
+                            grid.game_speed = 120
                             break
 
-
+        grid.play_sound()
     def connected_component_labeling(self, grid, grid_w, grid_h):
         # initially all the pixels in the image are labeled as 0 (background)
         labels = np.zeros([grid_h, grid_w], dtype=int)

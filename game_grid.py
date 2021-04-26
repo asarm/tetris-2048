@@ -3,7 +3,8 @@ from color import Color  # used for coloring the game grid
 import numpy as np  # fundamental Python module for scientific computing
 import copy
 from point import Point
-
+import pygame
+import os
 # Class used for modelling the game grid
 from tile import Tile
 
@@ -31,7 +32,11 @@ class GameGrid:
         self.score = 0
         self.next_tetromino = None
         self.pos = Point()
-        self.game_speed = 200
+        self.game_speed = 250
+
+        pygame.init()
+        pygame.font.init()
+        pygame.mixer.init()
     # Method used for displaying the game grid
     def display(self):
         # clear the background canvas to empty_cell_color
@@ -150,14 +155,6 @@ class GameGrid:
     def set_next(self, next_tetromino):
         self.next_tetromino = next_tetromino
 
-    def draw_next(self):
-        print(self.next_tetromino.type)
-        n = len(self.next_tetromino.occupied_tiles)
-        pos = Point()
-        pos.x = 13
-        pos.y = 13
-        for i in range(10, 15):
-            for j in range(10, 15):
-                self.tile_matrix[i][j] = None
-        self.next_tetromino.move_pos(13,13)
-        # self.next_tetromino.tile_matrix[0][1].set_position(pos)
+    def play_sound(self):
+        music = pygame.mixer.music.load(os.path.join('music.mp3'))
+        pygame.mixer.music.play(-1)
