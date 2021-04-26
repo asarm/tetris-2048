@@ -191,6 +191,7 @@ class Game:
                         grid.tile_matrix[a + 1][b] = None
                         grid.tile_matrix[a][b].number += grid.tile_matrix[a][b].number
                         grid.score += grid.tile_matrix[a][b].number
+                        grid.last_updated += grid.tile_matrix[a][b].number
                         grid.tile_matrix[a][b].updateColor(grid.tile_matrix[a][b].number)
                         merged = True
         return merged
@@ -208,9 +209,9 @@ class Game:
                     score = 0
                     for a in range(12):
                         score += grid.tile_matrix[h][a].number
-                        print(grid.tile_matrix[h][a].number)
                     row_count[h] = True
         grid.score += score
+        grid.last_updated += score
         return row_count
 
     def slide_down(self, row_count, grid):
@@ -433,22 +434,7 @@ class Game:
 
         else:
             text1_to_display = "Start Game"
-            secret_roll1 = "Never gonna give you up"
-            secret_roll2 = "Never gonna let you down"
-            secret_roll3 = "Never gonna run around and desert you"
-            secret_roll4 = "Never gonna make you cry"
-            secret_roll5 = "Never gonna say goodbye"
-            secret_roll6 = "Never gonna tell a lie and hurt you"
             stddraw.text(img_center_x, 5, text1_to_display)
-            FUN_value = random.randint(0, 500)
-            print(FUN_value)
-            if FUN_value == 499:
-                stddraw.text(img_center_x, 10.2, secret_roll1)
-                stddraw.text(img_center_x, 9.5, secret_roll2)
-                stddraw.text(img_center_x, 8.8, secret_roll3)
-                stddraw.text(img_center_x, 8.1, secret_roll4)
-                stddraw.text(img_center_x, 7.4, secret_roll5)
-                stddraw.text(img_center_x, 6.7, secret_roll6)
             # menu interaction loop
             while True:
                 # display the menu and wait for a short time (50 ms)

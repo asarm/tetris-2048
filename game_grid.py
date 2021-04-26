@@ -34,11 +34,14 @@ class GameGrid:
         self.pos = Point()
         self.game_speed = 250
 
+        self.last_updated = 0
+
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
     # Method used for displaying the game grid
     def display(self):
+        self.change_speed()
         # clear the background canvas to empty_cell_color
         stddraw.clear(self.empty_cell_color)
         # draw the game grid
@@ -158,3 +161,11 @@ class GameGrid:
     def play_sound(self):
         music = pygame.mixer.music.load(os.path.join('music.mp3'))
         pygame.mixer.music.play(-1)
+    
+    def change_speed(self):
+        if self.last_updated > 500:
+            change_rate = int(self.game_speed * 0.05)
+            print("Previous Speed", self.game_speed)
+            self.game_speed -= change_rate
+            print("New Speed", self.game_speed)
+            self.last_updated = 0
