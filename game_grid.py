@@ -8,7 +8,7 @@ import os
 # Class used for modelling the game grid
 from tile import Tile
 
-
+# Draws the game screen
 class GameGrid:
     # Constructor for creating the game grid based on the given arguments
     def __init__(self, grid_h, grid_w):
@@ -29,19 +29,25 @@ class GameGrid:
         # thickness values used for the grid lines and the grid boundaries
         self.line_thickness = 0.002
         self.box_thickness = 8 * self.line_thickness
+        # Keeps total game score
         self.score = 0
-        self.next_tetromino = None
+
         self.pos = Point()
+        # Keeps the default value of game speed
         self.game_speed = 250
-
+        # It maintains another score information to update the speed based on the total score.
         self.last_updated = 0
+        # Keeps number of time speed incread
+        self.speed_increased_counter = 0
 
+        # Initializes the necessary variables from pygame to play background.
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
 
     # Method used for displaying the game grid
     def display(self):
+        # Checks if value of last_updated is > 500, if yes, increases the game speed
         self.change_speed()
         # clear the background canvas to empty_cell_color
         stddraw.clear(self.empty_cell_color)
@@ -66,7 +72,7 @@ class GameGrid:
                 if self.tile_matrix[row][col] != None:
                     self.tile_matrix[row][col].draw()
 
-        # stop button
+        # Drawing the stop button
         stddraw.setPenColor(Color(230, 79, 79))
         stddraw.filledRectangle(10.5, 18.5, .6, .6)
         stddraw.setPenRadius(100)
@@ -74,13 +80,17 @@ class GameGrid:
         text_to_display = "| |"
         stddraw.text(10.8, 18.8, text_to_display)
 
+        # Draws the main score on the top right of the main game screen
         self.drawScore(self.score)
+
+        # Displays total number of count how many times the speed increased
+        self.display_info("Speed Increased", self.speed_increased_counter)
 
         # draw the inner lines of the grid
         stddraw.setPenColor(self.line_color)
         stddraw.setPenRadius(self.line_thickness)
+
         # x and y ranges for the game grid
-        # start_x, end_x = -0.5, self.grid_width - 0.5
         start_x, end_x = -0.5, 12 - 0.5
         start_y, end_y = -0.5, self.grid_height - 0.5
         for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
@@ -139,6 +149,7 @@ class GameGrid:
         # return the game_over flag
         return self.game_over
 
+    # Takes list of free tile (tiles which is not connected others), send them one unit down
     def move_free_tiles(self, free_tiles):
         for row in range(self.grid_height):  # excluding the bottommost row
             for col in range(self.grid_width):
@@ -149,23 +160,41 @@ class GameGrid:
                     self.tile_matrix[row - 1][col].move(dx, dy)
                     self.tile_matrix[row][col] = None
 
+    # Draws the main score on the top right of the main game screen
     def drawScore(self, score=0):
         stddraw.setPenRadius(150)
         stddraw.setPenColor(Color(255, 255, 255))
-        text_to_display = "Score: " + str(score)
+        text_to_display = "Score: "+str(score)
         stddraw.text(15.8, 18.8, text_to_display)
 
+    # Takes following tetromino from Game object rightside
     def set_next(self, next_tetromino):
         self.next_tetromino = next_tetromino
 
-    def play_sound(self):
+    # Plays as many music as an endless number of repetitions in the background
+    def play_sound(self, stopped = False):
         music = pygame.mixer.music.load(os.path.join('music.mp3'))
-        pygame.mixer.music.play(-1)
+        if not stopped:
+            pygame.mixer.music.play(-1)
+        else:
+            pygame.mixer.music.pause()
 
+    # Increases the game speed according to the total score
     def change_speed(self):
-        if self.last_updated > 500 and self.game_speed > 80:
+        if self.last_updated > 500 and self.game_speed >= 80:
             change_rate = int(self.game_speed * 0.05)
             print("Previous Speed", self.game_speed)
             self.game_speed -= change_rate
             print("New Speed", self.game_speed)
             self.last_updated = 0
+            self.speed_increased_counter += 1
+
+    # Displays given information text on the screen
+    def display_info(self, txt, count):
+        stddraw.setPenRadius(150)
+        stddraw.setPenColor(Color(255, 255, 255))
+        text_to_display = str(txt)+" x "+str(count)
+        stddraw.text(15.8, 18, text_to_display)
+
+        text_to_display = "NEXT TETROMINO"
+        stddraw.text(15.8, 16.5, text_to_display)
