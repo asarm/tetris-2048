@@ -17,8 +17,9 @@ class Tile:
 
    # Constructor that creates a tile at a given position with 2 as its number
    def __init__(self, position = Point(0, 0)): # (0, 0) is the default position
-      # assign the number on the tile
+      # Assigns the random number of the tile 2 or 4 for initial
       numbers = [2, 4]
+      # Sets a background color for each possible number
       self.colors = [Color(239, 230, 221), Color(239, 227, 205), Color(247,178,123), Color(247,150,99), Color(247,124,90),
                 Color(247,93,59), Color(239,205,115), Color(239,206,99), Color(239,198,82), Color(238,198,66), Color(239,194,49), Color(60,58,51)]
       self.num = int(np.random.choice(numbers, 1))
@@ -62,5 +63,6 @@ class Tile:
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x, self.position.y, str(self.number))
 
+   # Updates the background of the tile according to tile's number
    def updateColor(self, num):
       self.background_color = self.colors[int(math.log2(num)) - 1]
