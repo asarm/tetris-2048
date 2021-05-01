@@ -1,3 +1,7 @@
+'''
+Authors: Mert Arda Asar, Bengisu Özyiğit, Aylanur Ertürk
+Date: 27.04.2021
+'''
 import stddraw  # the stddraw module is used as a basic graphics library
 from color import Color  # used for coloring the game grid
 import numpy as np  # fundamental Python module for scientific computing
@@ -176,18 +180,20 @@ class GameGrid:
         music = pygame.mixer.music.load(os.path.join('music.mp3'))
         if not stopped:
             pygame.mixer.music.play(-1)
+            pygame.mixer.music.set_volume(0.3)
         else:
             pygame.mixer.music.pause()
 
-    # Increases the game speed according to the total score
+    # Increases the game speed according to the total score for each 500 score
+    # If game speed is less than 50, speed does not change
     def change_speed(self):
-        if self.last_updated > 500 and self.game_speed >= 80:
+        if self.last_updated > 500 and self.game_speed >= 50:
             change_rate = int(self.game_speed * 0.05)
             print("Previous Speed", self.game_speed)
             self.game_speed -= change_rate
             print("New Speed", self.game_speed)
-            self.last_updated = 0
             self.speed_increased_counter += 1
+            self.last_updated = self.score % 500
 
     # Displays given information text on the screen
     def display_info(self, txt, count):

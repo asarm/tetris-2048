@@ -1,3 +1,7 @@
+'''
+Authors: Mert Arda Asar, Bengisu Özyiğit, Aylanur Ertürk
+Date: 27.04.2021
+'''
 import numpy as np
 import stddraw  # the stddraw module is used as a basic graphics library
 import random  # used for creating tetrominoes with random types/shapes
@@ -12,7 +16,7 @@ class Game:
     # MAIN FUNCTION OF THE PROGRAM
     # -------------------------------------------------------------------------------
     # Main function where this program starts execution
-    def start(self):
+    def start(self):    
         # set the dimensions of the game grid
         grid_h, grid_w = 20, 20
         game_w = 12
@@ -345,9 +349,8 @@ class Game:
                         elif mouse_y >= button2_blc_y and mouse_y <= button2_blc_y + button_h:
                             self.is_paused = False
                             grid.score = 0
-                            grid.speed_increased_counter = 0
                             self.restart = True
-
+                            grid.speed_increased_counter = 0
                             # Allows user to choice game speed
                             self.speed_screen(grid, background_color, grid_width, grid_height, img_file, button_color)
                             break
